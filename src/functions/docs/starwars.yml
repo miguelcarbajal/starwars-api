@@ -1,0 +1,128 @@
+swagger: "2.0"
+info:
+  description: "This is an Indra Company Challenge"
+  version: "1.0.0"
+  title: "Starwars - Indra Challenge"
+  contact:
+    email: "miguelcarbajal@outlook.com"
+schemes:
+  - "https"
+paths:
+  "/starships"
+    post:
+      tags:
+        - "starships"
+      summary: "Add a new starship to the database"
+      description: ""
+      operationId: "addStarship"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      requestBody:
+          description: "Starship object that needs to be added to the database"
+          required: true
+          schema:
+            $ref: "#/definitions/Starship"
+      responses:
+        "201"
+          description: "Success response"
+          schema:
+            $ref: "#/definitions/RegisterSuccessResponse"
+        "500"
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/ApiErrorResponse"
+    get:
+      tags:
+        - "starships"
+      summary: "Finds all starships"
+      operationId: "findAllStarships"
+      produces:
+        - "application/json"
+      responses:
+        "200"
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Starship"
+        "500"
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/ApiErrorResponse"
+definitions:
+  Starship:
+    type: "object"
+    required:
+      - "nombre"
+      - "mglt"
+      - "capacidadDeCarga"
+      - "consumibles"
+      - "costoEnCreditos"
+      - "tripulacion"
+      - "calificacionDeHyperdrive"
+      - "longitud"
+      - "fabricante"
+      - "maximaVelocidadAtmosferica"
+      - "modelo"
+      - "pasajeros"
+      - "peliculas"
+      - "pilotos"
+      - "clase"
+      - "enlace"
+    properties:
+      id:
+        type: "string"
+      nombre:
+        type: "string"
+      mglt:
+        type: "string"
+      capacidadDeCarga:
+        type: "string"
+      consumibles:
+        type: "string"
+      costoEnCreditos:
+        type: "string"
+      tripulacion:
+        type: "string"
+      calificacionDeHyperdrive:
+        type: "string"
+      longitud:
+        type: "string"
+      fabricante:
+        type: "string"
+      maximaVelocidadAtmosferica:
+        type: "string"
+      modelo:
+        type: "string"
+      pasajeros:
+        type: "string"
+      peliculas:
+        type: "array"
+        items:
+          type: "string"
+      pilotos:
+        type: "array"
+        items:
+          type: "string"
+      clase:
+        type: "string"
+      enlace:
+        type: "string"
+      fechaDeCreacion:
+        type: "string"
+      fechaDeEdicion:
+        type: "string"
+  RegisterSuccessResponse:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      message:
+        type: "string"
+  ApiErrorResponse:
+    type: "object"
+    properties:
+      message:
+        type: "string"

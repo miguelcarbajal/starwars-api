@@ -1,0 +1,58 @@
+org: miguelcarbajal
+app: starwars-api
+service: starwars-api
+frameworkVersion: '2 || 3'
+
+custom:
+  tableName: 'starships-table-${sls:stage}'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: '20201221'
+  region: 'us-east-2'
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource:
+            - Fn::GetAtt: [ StarshipsTable, Arn ]
+  environment:
+    STARSHIPS_TABLE: ${self:custom.tableName}
+  httpApi:
+    cors: true
+
+functions:
+  getStarships:
+    handler: src/functions/getStarships/controller.handler
+    events:
+      - httpApi: 'GET /starships'
+  registerStarship:
+    handler: src/functions/registerStarship/controller.handler
+    events:
+      - httpApi: 'POST /starships'
+  docs:
+    handler: src/functions/docs/controller.handler
+    events:
+      - httpApi: 'GET /docs'
+
+resources:
+  Resources:
+    StarshipsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:custom.tableName}
